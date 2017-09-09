@@ -34,10 +34,10 @@ def example_function(receiver):
 
     except KeyboardInterrupt:
         receiver.stop()
-    except Exception as ex:
-        sender.send_msg(admin['id'], "Unexpected error " + str(ex))
-        receiver.stop()
-        raise ex
+    # except Exception as ex:
+    #     sender.send_msg(admin['id'], "Unexpected error " + str(ex))
+    #     receiver.stop()
+    #     raise ex
 
 
 receiver.message(example_function(
