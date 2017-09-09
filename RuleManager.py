@@ -12,5 +12,8 @@ class RuleManager:
 
     @classmethod
     def load_rules(cls):
-        with open(os.path.join(os.path.expanduser('~'), '.telegram-cli/rules.json'), "rb") as fd:
-            cls.rules = pickle.load(fd)
+        try:
+            with open(os.path.join(os.path.expanduser('~'), '.telegram-cli/rules.json'), "rb") as fd:
+                cls.rules = pickle.load(fd)
+        except Exception  as ex:
+            print("Error loading rules: " + str(ex))
