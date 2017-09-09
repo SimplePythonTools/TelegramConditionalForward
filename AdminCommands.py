@@ -109,7 +109,7 @@ class AdminCommands:
     def _do_rules(self, telegram_msg):
         msg = "\n".join(map(str, RuleManager.rules))
         if msg:
-            sender.msg(self._admin['id'], "Reglas actuales.")
+            sender.msg(self._admin['id'], "Estas son las Reglas actuales.")
             sender.msg(self._admin['id'], msg)
         else:
             sender.msg(self._admin['id'], "No hay reglas definidas.")
