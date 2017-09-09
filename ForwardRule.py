@@ -12,12 +12,12 @@ class ForwardRule:
 
     def evaluate(self, telegram_msg):
 
-        if 'text' in telegram_msg and (self._msg_contains in telegram_msg['text'] or self._msg_contains == ""):
-            print("msg match")
-            if 'sender' in telegram_msg and 'username' in telegram_msg['sender'] and telegram_msg['sender'][
-                'id'] == self._from_chat:
-                print("FORWARDED")
-                sender.fwd(self._to_chat, telegram_msg['id'])
+        # if 'text' in telegram_msg and (self._msg_contains in telegram_msg['text'] or self._msg_contains == ""):
+        #     print("msg match")
+        if 'receiver' in telegram_msg and 'id' in telegram_msg['receiver'] and telegram_msg['receiver'][
+            'id'] == self._from_chat:
+            print("FORWARDED " + self.__str__())
+            sender.fwd(self._to_chat, telegram_msg['id'])
 
     def __str__(self):
         from_info = info(self._from_chat)
