@@ -1,33 +1,46 @@
 from pytg.sender import Sender
 from pytg.receiver import Receiver
 from pytg.utils import coroutine
-import sys
+
+from AdminCommands import AdminCommands
+from RuleManager import RuleManager
 
 receiver = Receiver(host="localhost", port=4458)
 sender = Sender(host="localhost", port=4458)
 
-res = sender.get_self()
-print("Got: >%s<" % res)
-username = res.username
+admin = sender.get_self()
+adminCommands = AdminCommands(admin)
+print("Got: >%s<" % admin)
+username = admin.username
 print("my username is {user}".format(user=username))
 
-sender.send_msg(res['id'], "Reenvio de mensajes condicional activado")
+sender.send_msg(admin['id'], "Reenvio de mensajes condicional activado")
 
 receiver.start()
+
 
 @coroutine
 def example_function(receiver):
     try:
         while True:
-            msg = (yield)
-            print('Full dump: {array}'.format(array=str(msg)))
-            if 'sender' in msg and 'username' in msg['sender'] and msg['sender']['username'] == 'MetalBlueberry':
-                sender.fwd("$05000000015e714367c8a72dc125afb1", msg['id'])
+            telegram_msg = (yield)
+            print('Full dump: {array}'.format(array=str(telegram_msg)))
+            # check for admin
+            if adminCommands.handle(telegram_msg):
+                continue
+
+            for rule in RuleManager.rules:
+                rule.evaluate(telegram_msg)
+
     except KeyboardInterrupt:
         receiver.stop()
+    except Exception as ex:
+        sender.send_msg(admin['id'], "Unexpected error " + str(ex))
+        receiver.stop()
+        raise ex
 
 
 receiver.message(example_function(
     receiver))
 
-sender.send_msg(res['id'], "Telegram Conditional Forward is Dis")
+sender.send_msg(admin['id'], "Telegram Conditional Forward is Disabled")
