@@ -1,5 +1,3 @@
-import pickle
-import os
 from pytg.sender import Sender
 from ForwardRule import ForwardRule
 from RuleManager import RuleManager
@@ -33,7 +31,7 @@ class AdminCommands:
         def get_name(data):
             return data['print_name']
 
-        channles_names = map(get_name, channels)
+        channles_names = sorted(map(get_name, channels))
 
         sender.msg(self._admin['id'], "\n".join(channles_names))
 
@@ -43,7 +41,7 @@ class AdminCommands:
         def get_name(data):
             return data['print_name']
 
-        contact_list = map(get_name, contacts)
+        contact_list = sorted(map(get_name, contacts))
 
         sender.msg(self._admin['id'], "\n".join(contact_list))
 
@@ -53,7 +51,7 @@ class AdminCommands:
         def get_name(data):
             return data['print_name']
 
-        dialog_list = map(get_name, contacts)
+        dialog_list = sorted(map(get_name, contacts))
 
         sender.msg(self._admin['id'], "\n".join(dialog_list))
 
@@ -111,9 +109,10 @@ class AdminCommands:
     def _do_rules(self, telegram_msg):
         msg = "\n".join(map(str, RuleManager.rules))
         if msg:
+            sender.msg(self._admin['id'], "Reglas actuales.")
             sender.msg(self._admin['id'], msg)
         else:
             sender.msg(self._admin['id'], "No hay reglas definidas.")
 
     def _do_help(self, telegram_msg):
-        sender.msg(self._admin['id'], "\n".join(self._commands.keys()))
+        sender.msg(self._admin['id'], "\n".join(sorted(self._commands.keys())))

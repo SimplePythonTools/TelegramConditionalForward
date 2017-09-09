@@ -24,7 +24,7 @@ class ForwardRule:
         to_info = info(self._to_chat)
         print(from_info)
         print(to_info)
-        return "From " + from_info["print_name"] + " To " + to_info["print_name"]
+        return "De " + from_info["print_name"] + " a " + to_info["print_name"]
 
     def __repr__(self):
         return self.__str__()
