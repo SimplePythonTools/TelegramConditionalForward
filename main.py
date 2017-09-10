@@ -10,6 +10,7 @@ sender = Sender(host="localhost", port=4458)
 
 admin = sender.get_self()
 adminCommands = AdminCommands(admin)
+
 print("Got: >%s<" % admin)
 username = admin.username
 print("my username is {user}".format(user=username))
@@ -21,8 +22,9 @@ receiver.start()
 
 @coroutine
 def example_function(receiver):
-    try:
-        while True:
+
+    while True:
+        try:
             telegram_msg = (yield)
             print('Full dump: {array}'.format(array=str(telegram_msg)))
             # check for admin
@@ -32,15 +34,15 @@ def example_function(receiver):
             for rule in RuleManager.rules:
                 rule.evaluate(telegram_msg)
 
-    except KeyboardInterrupt:
-        receiver.stop()
-    # except Exception as ex:
-    #     sender.send_msg(admin['id'], "Unexpected error " + str(ex))
-    #     receiver.stop()
-    #     raise ex
+        except KeyboardInterrupt:
+            receiver.stop()
+            break
+        except Exception as ex:
+            sender.send_msg(admin['id'], "Unexpected error " + str(ex))
+            sender.send_msg(admin['id'], "Si el error persiste, reinicia el programa y avisa al desarrollador.")
+            raise ex
 
 
-receiver.message(example_function(
-    receiver))
+receiver.message(example_function(receiver))
 
-sender.send_msg(admin['id'], "Telegram Conditional Forward is Disabled")
+sender.send_msg(admin['id'], "El reenvio de mensajes condicional está desactivado")

@@ -11,9 +11,13 @@ class ForwardRule:
         self._msg_contains = msg_contains
 
     def evaluate(self, telegram_msg):
+        if 'text' in telegram_msg:
+            if self._msg_contains in telegram_msg['text'] or self._msg_contains == "":
+                print("msg match")
+            else:
+                print("not msg match")
+                return
 
-        # if 'text' in telegram_msg and (self._msg_contains in telegram_msg['text'] or self._msg_contains == ""):
-        #     print("msg match")
         if 'receiver' in telegram_msg and 'id' in telegram_msg['receiver'] and telegram_msg['receiver'][
             'id'] == self._from_chat:
             print("FORWARDED " + self.__str__())
@@ -24,10 +28,14 @@ class ForwardRule:
         to_info = info(self._to_chat)
         print(from_info)
         print(to_info)
-        return "De " + from_info["print_name"] + " a " + to_info["print_name"]
+        return from_info["print_name"] + " " +to_info["print_name"]
 
     def __repr__(self):
-        return self.__str__()
+        from_info = info(self._from_chat)
+        to_info = info(self._to_chat)
+        print(from_info)
+        print(to_info)
+        return "De " + from_info["print_name"] + " a " + to_info["print_name"]
 
     def __eq__(self, other):
         return self._to_chat == other._to_chat and self._from_chat == other._from_chat
