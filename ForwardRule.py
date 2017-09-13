@@ -13,14 +13,15 @@ class ForwardRule:
     def evaluate(self, telegram_msg):
         if 'text' in telegram_msg:
             if self._msg_contains in telegram_msg['text'] or self._msg_contains == "":
-                print("msg match")
+                # print("msg match")
+                pass
             else:
-                print("not msg match")
+                # print("not msg match")
                 return
 
         if 'receiver' in telegram_msg and 'id' in telegram_msg['receiver'] and telegram_msg['receiver'][
             'id'] == self._from_chat:
-            print("FORWARDED " + self.__str__())
+            print("FORWARDED " + self.__repr__())
             sender.fwd(self._to_chat, telegram_msg['id'])
 
     def __str__(self):
