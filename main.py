@@ -5,6 +5,12 @@ from pytg.utils import coroutine
 from AdminCommands import AdminCommands
 from RuleManager import RuleManager
 
+import logging
+
+logging.basicConfig(filename='runtime_log.log', format='%(levelname)s:%(message)s', level=logging.DEBUG)
+
+logging.info("Running start")
+
 receiver = Receiver(host="localhost", port=4458)
 sender = Sender(host="localhost", port=4458)
 
@@ -15,7 +21,7 @@ print("Got: >%s<" % admin)
 username = admin.username
 print("my username is {user}".format(user=username))
 
-sender.send_msg(admin['id'], "Reenvio de mensajes condicional activado")
+sender.send_msg(admin['id'], "Reenvio de mensajes condicional activado", enable_preview=True)
 
 receiver.start()
 
@@ -40,11 +46,7 @@ def example_function(receiver):
             break
         except Exception as ex:
             global ERROR_COUNT_LIMIT
-            sender.send_msg(admin['id'], "Unexpected error " + str(ex))
-            sender.send_msg(admin['id'], "Error type" + type(ex))
-            sender.send_msg(admin['id'], "debug")
-            sender.send_msg(admin['id'], ex.__repr__())
-            sender.send_msg(admin['id'], "Envia esta información al desarrollador")
+            logging.error(ex, exc_info=True)
             ERROR_COUNT_LIMIT -= 1
             if ERROR_COUNT_LIMIT == 0:
                 sender.send_msg(admin['id'], "El programa se apagará por motivos de seguridad.")
