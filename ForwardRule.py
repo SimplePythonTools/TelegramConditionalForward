@@ -17,25 +17,39 @@ class ForwardRule:
                 pass
             else:
                 # print("not msg match")
-                return
+                return False
 
         if 'receiver' in telegram_msg and 'id' in telegram_msg['receiver'] and telegram_msg['receiver'][
             'id'] == self._from_chat:
+            return True
+
+        return False
+
+    def execute(self, telegram_msg):
+        if self.evaluate(telegram_msg=telegram_msg):
             print("FORWARDED " + self.__repr__())
-            sender.fwd(self._to_chat, telegram_msg['id'])
+            # print(telegram_msg)
+            if "text" in telegram_msg:
+                sender.msg(self._to_chat, telegram_msg['text'])
+            elif "media" in telegram_msg:
+                sender.fwd_media(self._to_chat, telegram_msg['id'])
+                if telegram_msg['media']['caption']:
+                    sender.msg(self._to_chat, telegram_msg['media']['caption'])
+            else:
+                sender.fwd(self._to_chat, telegram_msg['id'])
 
     def __str__(self):
         from_info = info(self._from_chat)
         to_info = info(self._to_chat)
-        print(from_info)
-        print(to_info)
-        return from_info["print_name"] + " " +to_info["print_name"]
+        # print(from_info)
+        # print(to_info)
+        return from_info["print_name"] + " " + to_info["print_name"]
 
     def __repr__(self):
         from_info = info(self._from_chat)
         to_info = info(self._to_chat)
-        print(from_info)
-        print(to_info)
+        # print(from_info)
+        # print(to_info)
         return "De " + from_info["print_name"] + " a " + to_info["print_name"]
 
     def __eq__(self, other):

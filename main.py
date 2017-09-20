@@ -39,21 +39,21 @@ def example_function(receiver):
                 continue
 
             for rule in RuleManager.rules:
-                rule.evaluate(telegram_msg)
+                rule.execute(telegram_msg)
 
         except KeyboardInterrupt:
             receiver.stop()
             break
         except Exception as ex:
             global ERROR_COUNT_LIMIT
-            logging.error(ex, exc_info=True)
+            logging.exception(ex, exc_info=True)
             ERROR_COUNT_LIMIT -= 1
             if ERROR_COUNT_LIMIT == 0:
                 sender.send_msg(admin['id'], "El programa se apagará por motivos de seguridad.")
                 raise ex
             else:
                 sender.send_msg(admin['id'],
-                                "Quedan " + ERROR_COUNT_LIMIT + " errores antes de que se apague el programa.")
+                                "Quedan " + str(ERROR_COUNT_LIMIT) + " errores antes de que se apague el programa.")
 
 
 receiver.message(example_function(receiver))
