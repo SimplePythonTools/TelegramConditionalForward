@@ -27,7 +27,10 @@ class ForwardRule:
 
     def execute(self, telegram_msg):
         if self.evaluate(telegram_msg=telegram_msg):
-            print("FORWARDED " + self.__repr__())
+            try:
+                print("FORWARDED " + self.__repr__())
+            except TypeError as ex:
+                print("FORWARDED PRINT ERROR")
             # print(telegram_msg)
             if "text" in telegram_msg:
                 sender.msg(self._to_chat, telegram_msg['text'])
@@ -50,6 +53,7 @@ class ForwardRule:
         to_info = info(self._to_chat)
         # print(from_info)
         # print(to_info)
+
         return "De " + from_info["print_name"] + " a " + to_info["print_name"]
 
     def __eq__(self, other):
