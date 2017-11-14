@@ -42,19 +42,28 @@ class ForwardRule:
                 sender.fwd(self._to_chat, telegram_msg['id'])
 
     def __str__(self):
-        from_info = info(self._from_chat)
-        to_info = info(self._to_chat)
-        # print(from_info)
-        # print(to_info)
-        return from_info["print_name"] + " " + to_info["print_name"]
+        id = "ERROR LOADING THIS RULE"
+        try:
+            from_info = info(self._from_chat)
+            to_info = info(self._to_chat)
+            # print(from_info)
+            # print(to_info)
+            id = from_info["print_name"] + " " + to_info["print_name"]
+        except:
+            pass
+        return id
 
     def __repr__(self):
-        from_info = info(self._from_chat)
-        to_info = info(self._to_chat)
-        # print(from_info)
-        # print(to_info)
-
-        return "De " + from_info["print_name"] + " a " + to_info["print_name"]
+        id = "ERROR LOADING THIS RULE"
+        try:
+            from_info = info(self._from_chat)
+            to_info = info(self._to_chat)
+            # print(from_info)
+            # print(to_info)
+            id = "De " + from_info + " a " + to_info
+        except:
+            pass
+        return id
 
     def __eq__(self, other):
         return self._to_chat == other._to_chat and self._from_chat == other._from_chat
