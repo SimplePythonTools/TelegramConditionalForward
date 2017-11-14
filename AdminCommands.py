@@ -107,6 +107,16 @@ class AdminCommands:
                 sender.msg(self._admin['id'], "La Regla no existe")
 
     def _do_rules(self, telegram_msg):
+
+        contains_invalid_channels = False
+        for rule in list(RuleManager.rules):
+            if not rule.is_still_valid():
+                RuleManager.rules.remove(rule)
+                sender.msg(self._admin['id'], "Eliminada regla inválida.")
+                contains_invalid_channels = True
+        if contains_invalid_channels:
+            RuleManager.save_rules()
+
         msg = "\n".join(map(str, RuleManager.rules))
         if msg:
             sender.msg(self._admin['id'], "Estas son las Reglas actuales.")

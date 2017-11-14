@@ -53,6 +53,14 @@ class ForwardRule:
             pass
         return id
 
+    def is_still_valid(self):
+        try:
+            from_info = info(self._from_chat)
+            to_info = info(self._to_chat)
+            return not(from_info is None or to_info is None)
+        except:
+            return False
+
     def __repr__(self):
         id = "ERROR LOADING THIS RULE"
         try:
