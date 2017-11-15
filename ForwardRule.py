@@ -5,10 +5,12 @@ from utilities import info
 class ForwardRule:
     # RULES
 
-    def __init__(self, from_chat, to_chat, msg_contains=""):
-        self._from_chat = from_chat
-        self._to_chat = to_chat
-        self._msg_contains = msg_contains
+    def __init__(self, _from_chat, _to_chat, _msg_contains=""):
+        self._from_chat = _from_chat
+        self._to_chat = _to_chat
+        self._msg_contains = _msg_contains
+        self._from_chat_name = None
+        self._to_chat_name = None
 
     def evaluate(self, telegram_msg):
         if 'text' in telegram_msg:
@@ -41,37 +43,40 @@ class ForwardRule:
             else:
                 sender.fwd(self._to_chat, telegram_msg['id'])
 
-    def __str__(self):
-        id = "ERROR LOADING THIS RULE"
+    def get_names_from_server(self):
         try:
-            from_info = info(self._from_chat)
-            to_info = info(self._to_chat)
-            # print(from_info)
-            # print(to_info)
-            id = from_info["print_name"] + " " + to_info["print_name"]
-        except:
-            pass
-        return id
-
-    def is_still_valid(self):
-        try:
-            from_info = info(self._from_chat)
-            to_info = info(self._to_chat)
-            return not(from_info is None or to_info is None)
+            is_new = ("_from_chat_name" in self.__dict__)
+            if not is_new:
+                self._from_chat_name = "ERROR"
+            is_new = ("_to_chat_name" in self.__dict__)
+            if not is_new:
+                self._to_chat_name = "ERROR"
+            if "ERROR" in self._from_chat_name and \
+                "ERROR" in self._to_chat_name:
+                from_info = info(self._from_chat)
+                to_info = info(self._to_chat)
+                self._from_chat_name = from_info["print_name"]
+                self._to_chat_name = to_info["print_name"]
+                return True
+            else:
+                return True
         except:
             return False
 
+    def __str__(self):
+        id = "ERROR LOADING THIS RULE"
+        self.get_names_from_server()
+        if self._from_chat_name is None or self._to_chat_name is None:
+            return id
+        id = self._from_chat_name + " " + self._to_chat_name
+        return id
+
     def __repr__(self):
         id = "ERROR LOADING THIS RULE"
-        try:
-            from_info = info(self._from_chat)
-            to_info = info(self._to_chat)
-            # print(from_info)
-            # print(to_info)
-            id = "De " + from_info["print_name"] + " a " + to_info["print_name"]
-            # id = "De " + from_info + " a " + to_info
-        except:
-            pass
+        self.get_names_from_server()
+        if self._from_chat_name is None or self._to_chat_name is None:
+            return id
+        id = "De " + self._from_chat_name + " a " + self._to_chat_name
         return id
 
     def __eq__(self, other):
