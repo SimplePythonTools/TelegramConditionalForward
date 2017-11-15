@@ -68,7 +68,8 @@ class ForwardRule:
             to_info = info(self._to_chat)
             # print(from_info)
             # print(to_info)
-            id = "De " + from_info + " a " + to_info
+            id = "De " + from_info["print_name"] + " a " + to_info["print_name"]
+            # id = "De " + from_info + " a " + to_info
         except:
             pass
         return id
